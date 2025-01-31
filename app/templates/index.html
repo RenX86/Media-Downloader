@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <h1 class="mb-4">Media Downloader</h1>
+        <form method="POST">
+            <div class="input-group mb-3">
+                <input type="url" name="url" class="form-control" 
+                       placeholder="Enter video URL (YouTube, Vimeo)" required>
+                <button class="btn btn-primary" type="submit">Get Info</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

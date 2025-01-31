@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <h2>{{ info.title }}</h2>
+        <img src="{{ info.thumbnail }}" class="img-thumbnail mb-3" alt="Thumbnail">
+        
+        <form method="POST" action="{{ url_for('main.download') }}">
+            <input type="hidden" name="url" value="{{ info.url }}">
+            
+            <div class="row">
+                <!-- Video Formats -->
+                <div class="col-md-6 mb-4">
+                    <h4>Video Quality:</h4>
+                    <div class="list-group">
+                        {% for format in info.video_formats %}
+                        <label class="list-group-item">
+                            <input class="form-check-input me-1" type="radio" 
+                                   name="video_format" value="{{ format.format_id }}" required>
+                            {{ format.resolution }} ({{ format.ext|upper }})
+                            <span class="badge bg-primary ms-2">
+                                {{ (format.filesize / (1024*1024))|round(2) }}MB
+                            </span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Audio Formats -->
+                <div class="col-md-6 mb-4">
+                    <h4>Audio Quality:</h4>
+                    <div class="list-group">
+                        {% for format in info.audio_formats %}
+                        <label class="list-group-item">
+                            <input class="form-check-input me-1" type="radio" 
+                                   name="audio_format" value="{{ format.format_id }}" required>
+                            {{ format.bitrate }} kbps ({{ format.ext|upper }})
+                            <span class="badge bg-primary ms-2">
+                                {{ (format.filesize / (1024*1024))|round(2) }}MB
+                            </span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-success btn-lg w-100">
+                Download Merged Video/Audio
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}
