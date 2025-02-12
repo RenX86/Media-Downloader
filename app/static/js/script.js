@@ -1,24 +1,30 @@
-// Handle form submissions and loading states
-document.addEventListener('DOMContentLoaded', () => {
-    // Show loading state during downloads
-    const forms = document.querySelectorAll('form');
+import io from "socket.io-client";
+
+document.addEventListener("DOMContentLoaded", () => {
+    const socket = io("/downloads");
+    const loadingButton = document.querySelector(".progress-button");
     
-    forms.forEach(form => {
+    // Submit handler
+    document.querySelectorAll('form').forEach(form => {
         form.addEventListener('submit', (e) => {
-            const btn = form.querySelector('button[type="submit"]');
+            e.preventDefault();
+            const btn = e.target.querySelector('button[type="submit"]');
+            
             if (btn) {
+                btn.innerHTML = '<div class="spinner-border text-light" role="status"></div>';
                 btn.disabled = true;
-                btn.innerHTML = `
-                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                    Processing...
-                `;
+                
+                // Simulate async task
+                setTimeout(() => {
+                    btn.innerHTML = 'Download Completed';
+                    btn.disabled = false;
+                }, 5000);
             }
         });
     });
-
-    // Handle download progress updates (placeholder for future implementation)
-    const progressBar = document.querySelector('.progress-bar');
-    if (progressBar) {
-        // You can implement WebSocket/Socket.io updates here later
-    }
+    
+    // Progress updates (future implementation)
+    socket.on("progress", data => {
+        document.querySelector(".progress-bar").style.width = `${parseInt(data.progress)}%`;
+    });
 });
