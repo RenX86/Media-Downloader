@@ -4,3 +4,4 @@ python-dotenv
 ffmpeg-python
 gunicorn
 gallery-dl
+flask-caching
