@@ -2,56 +2,100 @@
 
 {% block content %}
 <div class="row justify-content-center">
-    <div class="col-md-8">
-        <h2>{{ info.title }}</h2>
-        <img src="{{ info.thumbnail }}" class="img-thumbnail mb-3" alt="Thumbnail">
+    <div class="col-md-10">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Home</a></li>
+                <li class="breadcrumb-item active">Video Options</li>
+            </ol>
+        </nav>
         
-        <form method="POST" action="{{ url_for('main.download_video_route') }}">
-            <input type="hidden" name="url" value="{{ info.url }}">
-            
-            <div class="row">
-                <!-- Video Formats -->
-                <div class="col-md-6 mb-4">
-                    <h4>Video Quality:</h4>
-                    <div class="list-group">
-                        {% for format in info.video_formats %}
-                        <label class="list-group-item">
-                            <input class="form-check-input me-1" type="radio" 
-                                   name="video_format" value="{{ format.format_id }}" required>
-                            {{ format.resolution }} ({{ format.ext|upper }})
-                            {% if format.filesize is not none %}
-                                <span class="badge bg-primary ms-2">
-                                    {{ (format.filesize / (1024*1024))|round(2) }}MB
-                                </span>
-                            {% endif %}
-                        </label>
-                        {% endfor %}
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="bi bi-film"></i> Video Download Options</h5>
+            </div>
+            <div class="card-body">
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <img src="{{ info.thumbnail }}" class="img-thumbnail mb-3 w-100" alt="Thumbnail">
+                    </div>
+                    <div class="col-md-8">
+                        <h3>{{ info.title }}</h3>
+                        {% if info.uploader %}
+                        <p><strong>Uploader:</strong> {{ info.uploader }}</p>
+                        {% endif %}
+                        {% if info.duration %}
+                        <p><strong>Duration:</strong> {{ info.duration }} seconds</p>
+                        {% endif %}
+                        <a href="{{ url_for('main.index') }}" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left"></i> Back to Home
+                        </a>
                     </div>
                 </div>
-
-                <!-- Audio Formats -->
-                <div class="col-md-6 mb-4">
-                    <h4>Audio Quality:</h4>
-                    <div class="list-group">
-                        {% for format in info.audio_formats %}
-                        <label class="list-group-item">
-                            <input class="form-check-input me-1" type="radio" 
-                                   name="audio_format" value="{{ format.format_id }}" required>
-                            {{ format.bitrate }} kbps ({{ format.ext|upper }})
-                            <span class="badge bg-primary ms-2">
-                                {{ (format.filesize / (1024*1024))|round(2) }}MB
-                            </span>
-                        </label>
-                        {% endfor %}
+                
+                <form method="POST" action="{{ url_for('main.download_video_route') }}" id="download-form">
+                    <input type="hidden" name="url" value="{{ info.url }}">
+                    
+                    <div class="row">
+                        <!-- Video Formats -->
+                        <div class="col-md-6 mb-4">
+                            <div class="card h-100">
+                                <div class="card-header bg-info text-white">
+                                    <h5 class="mb-0">Video Quality</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="list-group">
+                                        {% for format in info.video_formats %}
+                                        <label class="list-group-item">
+                                            <input class="form-check-input me-1" type="radio" name="video_format" 
+                                                   value="{{ format.format_id }}" {% if loop.first %}checked{% endif %}>
+                                            {{ format.quality }} - {{ format.ext }} 
+                                            {% if format.filesize %}
+                                            <span class="badge bg-secondary float-end">{{ (format.filesize / 1048576)|round(1) }} MB</span>
+                                            {% endif %}
+                                        </label>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Audio Formats -->
+                        <div class="col-md-6 mb-4">
+                            <div class="card h-100">
+                                <div class="card-header bg-info text-white">
+                                    <h5 class="mb-0">Audio Quality</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="list-group">
+                                        {% for format in info.audio_formats %}
+                                        <label class="list-group-item">
+                                            <input class="form-check-input me-1" type="radio" name="audio_format" 
+                                                   value="{{ format.format_id }}" {% if loop.first %}checked{% endif %}>
+                                            {{ format.quality }} - {{ format.ext }}
+                                            {% if format.filesize %}
+                                            <span class="badge bg-secondary float-end">{{ (format.filesize / 1048576)|round(1) }} MB</span>
+                                            {% endif %}
+                                        </label>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+                    
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="bi bi-download"></i> Download Video
+                        </button>
+                    </div>
+                </form>
+                
+                <div class="alert alert-info mt-4">
+                    <i class="bi bi-info-circle"></i> The video file will be automatically deleted from our server after you download it.
                 </div>
             </div>
-            
-
-            <button type="submit" class="btn btn-success btn-lg w-100">
-                Download Merged Video/Audio
-            </button>
-        </form>
+        </div>
     </div>
 </div>
 {% endblock %}

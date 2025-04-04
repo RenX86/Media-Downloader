@@ -1,6 +1,10 @@
 import yt_dlp
 import os
 import re
+import subprocess
+import time
+import zipfile
+import shutil
 from config import Config
 from pathlib import Path
 from werkzeug.utils import secure_filename
@@ -98,3 +102,48 @@ def download_video(url, video_format, audio_format):
             return ydl.prepare_filename(info)
         except Exception as e:
             raise DownloadValidationError(f"Download failed: {str(e)}")
+
+
+def download_images(url):
+    """Download images using gallery-dl and return the path to the first downloaded image"""
+    images_dir = Config.DOWNLOAD_FOLDER / "images"
+    
+    # Create directory if it doesn't exist
+    images_dir.mkdir(parents=True, exist_ok=True)
+    
+    try:
+        # Parse domain to validate
+        domain = url.split('/')[2]
+        if not any(allowed in domain for allowed in Config.ALLOWED_IMAGE_DOMAINS):
+            raise DownloadValidationError(f"Domain {domain} is not in the allowed list")
+        
+        # Generate a unique subfolder for this download
+        timestamp = int(time.time())
+        download_dir = images_dir / f"download_{timestamp}"
+        download_dir.mkdir(parents=True, exist_ok=True)
+        
+        # Run gallery-dl to download images
+        result = subprocess.run([
+            "gallery-dl", 
+            "--dest", str(download_dir),
+            "--filename", "{filename}.{extension}",
+            url
+        ], capture_output=True, text=True)
+        
+        if result.returncode != 0:
+            raise DownloadValidationError(f"gallery-dl error: {result.stderr}")
+        
+        # Find all downloaded files
+        downloaded_files = list(download_dir.glob('**/*.*'))
+        if not downloaded_files:
+            raise DownloadValidationError("No images were downloaded")
+        
+        # Return information about downloaded files
+        return {
+            'directory': str(download_dir),
+            'files': [str(f) for f in downloaded_files],
+            'count': len(downloaded_files)
+        }
+    
+    except Exception as e:
+        raise DownloadValidationError(f"Failed to download images: {str(e)}")

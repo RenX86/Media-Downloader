@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Home</a></li>
+                <li class="breadcrumb-item active">Image Gallery</li>
+            </ol>
+        </nav>
+        
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="bi bi-images"></i> Downloaded Images</h5>
+                <span class="badge bg-light text-dark">{{ count }} images</span>
+            </div>
+            <div class="card-body">
+                {% if count > 0 %}
+                <div class="mb-3 d-flex justify-content-between">
+                    <a href="{{ url_for('main.index') }}" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left"></i> Back to Home
+                    </a>
+                    <a href="{{ url_for('main.cleanup_images') }}" class="btn btn-outline-danger" 
+                       onclick="return confirm('Are you sure you want to clean up all downloaded images?')">
+                        <i class="bi bi-trash"></i> Clean Up Files
+                    </a>
+                </div>
+                
+                <div class="row row-cols-1 row-cols-md-3 g-4">
+                    {% for image in images %}
+                    <div class="col">
+                        <div class="card h-100 shadow-sm">
+                            <div class="image-container">
+                                <img src="{{ url_for('main.download_image', index=loop.index0) }}" 
+                                     class="card-img-top" alt="Image {{ loop.index }}">
+                            </div>
+                            <div class="card-body">
+                                <h6 class="card-title text-truncate" title="{{ filenames[loop.index0] }}">
+                                    {{ filenames[loop.index0] }}
+                                </h6>
+                                <a href="{{ url_for('main.download_image', index=loop.index0) }}" 
+                                   class="btn btn-primary w-100" download>
+                                   <i class="bi bi-download"></i> Download
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <div class="alert alert-info mt-4">
+                    <i class="bi bi-info-circle"></i> Files will be automatically deleted from our server after you download them or click "Clean Up Files".
+                </div>
+                {% else %}
+                <div class="text-center py-5">
+                    <i class="bi bi-emoji-frown" style="font-size: 3rem;"></i>
+                    <h4 class="mt-3">No Images Found</h4>
+                    <p>There are no images available to display.</p>
+                    <a href="{{ url_for('main.index') }}" class="btn btn-primary mt-2">
+                        <i class="bi bi-house"></i> Return to Home
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

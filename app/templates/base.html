@@ -5,10 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Media Downloader</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <div class="container mt-5">
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('main.index') }}">
+                <i class="bi bi-cloud-download"></i> Media Downloader
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.index') }}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#helpModal">Help</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
@@ -23,6 +46,51 @@
         {% block content %}{% endblock %}
     </div>
     
+    <!-- Help Modal -->
+    <div class="modal fade" id="helpModal" tabindex="-1" aria-labelledby="helpModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="helpModalLabel">How to Use Media Downloader</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h5>Video Downloads</h5>
+                    <ol>
+                        <li>Enter a video URL from YouTube, Instagram, Vimeo, etc.</li>
+                        <li>Click "Analyze Video" to see available formats</li>
+                        <li>Select your preferred video and audio quality</li>
+                        <li>Click "Download" to save the video to your device</li>
+                    </ol>
+                    
+                    <h5>Image Downloads</h5>
+                    <ol>
+                        <li>Enter a URL from Reddit, Imgur, Instagram, etc.</li>
+                        <li>Click "Download Images" to fetch all images</li>
+                        <li>Browse the gallery of downloaded images</li>
+                        <li>Click "Download" under any image to save it to your device</li>
+                    </ol>
+                    
+                    <h5>Supported Sites</h5>
+                    <p><strong>Videos:</strong> YouTube, Vimeo, Instagram, and many more</p>
+                    <p><strong>Images:</strong> Reddit, Imgur, Instagram, DeviantArt, Pixiv, and more</p>
+                    
+                    <h5>File Management</h5>
+                    <p>Files are automatically deleted from our server after you download them to save space.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer mt-5 py-3 bg-light">
+        <div class="container text-center">
+            <span class="text-muted">Media Downloader &copy; 2025</span>
+        </div>
+    </footer>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>

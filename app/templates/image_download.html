@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Home</a></li>
+                <li class="breadcrumb-item active">Image Download</li>
+            </ol>
+        </nav>
+        
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0"><i class="bi bi-images"></i> Image Download</h5>
+            </div>
+            <div class="card-body">
+                <h6 class="mb-3">Downloading from: <span class="text-primary">{{ url }}</span></h6>
+                
+                <div class="progress mb-3" style="height: 25px;">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" 
+                         role="progressbar" style="width: 0%" id="download-progress">
+                        <span id="progress-text">Starting download...</span>
+                    </div>
+                </div>
+                
+                <div id="status-message" class="alert alert-info">
+                    <i class="bi bi-info-circle"></i> Fetching images from the URL. This may take a moment...
+                </div>
+                
+                <div id="download-complete" style="display: none;">
+                    <div class="text-center">
+                        <i class="bi bi-check-circle text-success" style="font-size: 3rem;"></i>
+                        <h4 class="mt-2">Download Complete!</h4>
+                        <p>Your images have been successfully downloaded.</p>
+                        <a href="{{ url_for('main.browse_images') }}" class="btn btn-success btn-lg mt-2">
+                            <i class="bi bi-images"></i> Browse Downloaded Images
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const progressBar = document.getElementById('download-progress');
+    const progressText = document.getElementById('progress-text');
+    const statusMessage = document.getElementById('status-message');
+    const downloadComplete = document.getElementById('download-complete');
+    
+    // Simulate progress
+    let progress = 0;
+    const interval = setInterval(() => {
+        if (progress < 90) {
+            progress += 5;
+            progressBar.style.width = progress + '%';
+            progressText.textContent = 'Downloading... ' + progress + '%';
+        }
+    }, 300);
+    
+    // Start the download process
+    fetch("{{ url_for('main.process_image_download', url=url) }}")
+        .then(response => response.json())
+        .then(data => {
+            clearInterval(interval);
+            
+            if (data.success) {
+                progressBar.style.width = '100%';
+                progressText.textContent = 'Complete!';
+                statusMessage.className = 'alert alert-success';
+                statusMessage.innerHTML = '<i class="bi bi-check-circle"></i> ' + data.message;
+                downloadComplete.style.display = 'block';
+            } else {
+                progressBar.style.width = '100%';
+                progressBar.classList.remove('bg-success');
+                progressBar.classList.add('bg-danger');
+                progressText.textContent = 'Failed!';
+                statusMessage.className = 'alert alert-danger';
+                statusMessage.innerHTML = '<i class="bi bi-exclamation-triangle"></i> Error: ' + data.message;
+            }
+        })
+        .catch(error => {
+            clearInterval(interval);
+            progressBar.style.width = '100%';
+            progressBar.classList.remove('bg-success');
+            progressBar.classList.add('bg-danger');
+            progressText.textContent = 'Failed!';
+            statusMessage.className = 'alert alert-danger';
+            statusMessage.innerHTML = '<i class="bi bi-exclamation-triangle"></i> Error: ' + error;
+        });
+});
+</script>
+{% endblock %}

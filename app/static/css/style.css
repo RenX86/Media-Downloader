@@ -1,28 +1,74 @@
-/* Basic styling */
+/* General Styles */
 body {
-    background-color: #f8f9fa;
     min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #f8f9fa;
 }
 
-.container {
-    padding: 2rem 0;
+.footer {
+    margin-top: auto;
 }
 
-.video-card {
-    background: white;
-    border-radius: 8px;
-    padding: 1.5rem;
-    margin: 1rem 0;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+/* Card Styles */
+.card {
+    transition: transform 0.2s, box-shadow 0.2s;
+    border-radius: 0.5rem;
+    overflow: hidden;
 }
 
-.progress-bar {
-    transition: width 0.3s ease;
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
 
-.loading-spinner {
-    display: none;
-    width: 2rem;
-    height: 2rem;
-    border-width: 0.25em;
+.card-header {
+    font-weight: 500;
+}
+
+/* Image Gallery */
+.image-container {
+    height: 200px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f0f0f0;
+}
+
+.image-container img {
+    max-height: 100%;
+    object-fit: contain;
+}
+
+/* Progress Bar */
+.progress {
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+/* Navbar */
+.navbar-brand {
+    font-weight: 600;
+}
+
+/* Breadcrumbs */
+.breadcrumb {
+    background-color: #f8f9fa;
+    padding: 0.75rem 1rem;
+    border-radius: 0.25rem;
+    margin-bottom: 1rem;
+}
+
+/* Buttons */
+.btn {
+    border-radius: 0.25rem;
+    padding: 0.5rem 1rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .row-cols-md-3 {
+        row-gap: 1rem;
+    }
 }

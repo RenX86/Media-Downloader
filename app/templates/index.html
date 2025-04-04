@@ -2,22 +2,65 @@
 
 {% block content %}
 <div class="row justify-content-center">
-    <div class="col-md-8">
-        <h1 class="mb-4">Media Downloader</h1>
+    <div class="col-md-10">
+        <div class="text-center mb-4">
+            <h1 class="display-4">Media Downloader</h1>
+            <p class="lead">Download videos and images from your favorite websites</p>
+        </div>
 
-        <!-- Video Download -->
-        <div class="card mb-4">
-            <div class="card-body">
-                <h5>Video Download</h5>
-                <form method="POST" action="{{ url_for('main.handle_video') }}">
-                    <div class="input-group">
-                        <input type="url" name="video_url" 
-                               class="form-control" placeholder="YouTube/Instagram Etc.. URL" required>
-                        <button class="btn btn-primary" type="submit">
-                            Analyze Video
-                        </button>
+        <div class="row">
+            <!-- Video Download -->
+            <div class="col-md-6 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0"><i class="bi bi-film"></i> Video Download</h5>
                     </div>
-                </form>
+                    <div class="card-body">
+                        <p class="card-text">Download videos from YouTube, Instagram, Vimeo, and more.</p>
+                        <form method="POST" action="{{ url_for('main.handle_video') }}">
+                            <div class="mb-3">
+                                <label for="video_url" class="form-label">Video URL</label>
+                                <input type="url" id="video_url" name="video_url" 
+                                       class="form-control" placeholder="https://youtube.com/watch?v=..." required>
+                                <div class="form-text">Paste the URL of the video you want to download</div>
+                            </div>
+                            <button class="btn btn-primary w-100" type="submit">
+                                <i class="bi bi-search"></i> Analyze Video
+                            </button>
+                        </form>
+                    </div>
+                    <div class="card-footer bg-light">
+                        <small class="text-muted">Supported: YouTube, Vimeo, Instagram, etc.</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Image Download -->
+            <div class="col-md-6 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0"><i class="bi bi-images"></i> Image Download</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">Download images from Reddit, Imgur, Instagram, and more.</p>
+                        <form method="POST" action="{{ url_for('main.handle_image') }}">
+                            <div class="mb-3">
+                                <label for="image_url" class="form-label">Image URL</label>
+                                <input type="url" id="image_url" name="image_url" 
+                                       class="form-control" placeholder="https://imgur.com/gallery/..." required>
+                                <div class="form-text">Paste the URL of the page containing images</div>
+                            </div>
+                            <button class="btn btn-success w-100" type="submit">
+                                <i class="bi bi-download"></i> Download Images
+                            </button>
+                        </form>
+                    </div>
+                    <div class="card-footer bg-light">
+                        <small class="text-muted">Supported: Reddit, Imgur, Instagram, DeviantArt, etc.</small>
+                    </div>
+                </div>
             </div>
         </div>
+    </div>
+</div>
 {% endblock %}
