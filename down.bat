@@ -1,6 +1,10 @@
 @echo off
 echo Setting up Media Downloader...
 
+REM Get the directory where the batch file is located
+set "PROJECT_DIR=%~dp0"
+cd /d "%PROJECT_DIR%"
+
 REM Check if Python is installed
 python --version >nul 2>&1
 if %errorlevel% neq 0 (
